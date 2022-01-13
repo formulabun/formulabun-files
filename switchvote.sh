@@ -10,7 +10,6 @@ then
   rm $dir/$fileA
   ln -s $fileB $dir
 else
-then
   rm $dir/$fileB
   ln -s $fileA $dir
 fi
