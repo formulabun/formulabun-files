@@ -1,2 +1,5 @@
 # slade stuff
 *.bak
+
+# should be linked by the script
+load/k_formulabun_vote_*.wad
