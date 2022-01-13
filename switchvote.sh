@@ -1,15 +1,18 @@
 #!/bin/bash
 
-dir="load"
+base="/home/srb2kart/mods/fbun/"
+dir="load/"
 
 fileA="k_formulabun_vote_A.wad"
 fileB="k_formulabun_vote_B.wad"
 
-if [ -L $dir/$fileA ]
+cd $base$dir
+
+if [ -L $fileA ]
 then
-  rm $dir/$fileA
-  ln -s $fileB $dir
+  rm $fileA
+  ln -s $base$fileB .
 else
-  rm $dir/$fileB
-  ln -s $fileA $dir
+  rm $fileB
+  ln -s $base$fileA .
 fi
