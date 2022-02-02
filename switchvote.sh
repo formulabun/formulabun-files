@@ -3,8 +3,8 @@
 base="/home/srb2kart/mods/fbun/"
 dir="load/"
 
-fileA="k_formulabun_vote_A.wad"
-fileB="k_formulabun_vote_B.wad"
+fileA="k_formulabun_vote_A*.wad"
+fileB="k_formulabun_vote_B*.wad"
 
 cd $base$dir
 
