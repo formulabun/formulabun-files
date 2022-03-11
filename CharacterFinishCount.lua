@@ -41,6 +41,7 @@ end);
 addHook("ThinkFrame", function()
   for p in players.iterate do
     if not (p.valid and p.mo) then continue end;
+    if consoleplayer and p != consoleplayer then continue end; -- only keep console player stats if consoleplayer
     if p.exiting == 199 then -- player just finished, add one to count
       local skin = p.mo.skin;
       data[skin] = (data[skin] or 0) + 1;
