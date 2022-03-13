@@ -1,17 +1,18 @@
-local PATH = "characterFinishes.cfg";
+-- Written by Fl_GUI with no intention of sharing it. If you want to use this
+-- go ahead but I'm not obliged to help you with this in any way.
+
+local PATH = "character_finishes.cfg";
 local data = {};
 local doOnce = false;
 
 local file = io.open(PATH, "r");
-if file then 
-  print("file exists");
+if file then
   for l in file:lines() do
     local characterText, countText = string.match(l, "(%a+) (%d+)");
     data[characterText] = tonumber(countText);
   end;
   file:close();
 else
-  print("file doesn't exist");
   file = assert(io.open(PATH, "w"));
   if file then
     file:close();
@@ -33,16 +34,11 @@ local function writeFile()
   file:close();
 end;
 
-
-COM_AddCommand("debug", function(player) 
-  print(player.mo.skin);
-end);
-
 addHook("ThinkFrame", function()
   for p in players.iterate do
     if not (p.valid and p.mo) then continue end;
-    if consoleplayer and p != consoleplayer then continue end; -- only keep console player stats if consoleplayer
     if p.exiting == 199 then -- player just finished, add one to count
+      if consoleplayer != server and p != consoleplayer then continue end; -- only keep console player stats if consoleplayer
       local skin = p.mo.skin;
       data[skin] = (data[skin] or 0) + 1;
     end;
