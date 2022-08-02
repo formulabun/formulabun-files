@@ -1,12 +1,19 @@
 local bumperhud = "gametypeinfo";
-local enabled = false;
 local pointSubtract = 1;
 
+-- Net vars
+local enabled = false;
+
 local cvar_enable = CV_RegisterVar({
-    name= "nobumpers",
-    defaultvalue= 0,
-    flags= CV_NETVAR,
-    PossibleValue= CV_OnOff,
+    name = "nobumpers",
+    defaultvalue = 0,
+    flags = CV_NETVAR,
+    PossibleValue = CV_OnOff,
+    func = function(var)
+      if (not var.value) then
+        hud.enabled(bumperhud) 
+      end
+    end
 });
 
 local function subtractPoints(player)
@@ -30,6 +37,7 @@ end;
 
 local function setEnabled()
   enabled = isEnabled();
+  if enabled then hud.disable(bumperhud) end;
 end;
 
 local function hideBumpers(obj) 
@@ -61,14 +69,11 @@ local function setWanted()
 end
 
 local function bumperAndScoreLogic() 
-  if (not enabled) then hud.enable(bumperhud) ; return end;
+  if (not enabled) then return end;
 
-  hud.disable(bumperhud);
   setWanted()
   for p in players.iterate do
     if (p == nil or p.mo == nil) then continue end;
-
-    COM_BufInsertText(p, "echo "..p.kartstuff[k_wanted]);
 
     -- in case player stole one
     if (p.kartstuff[k_bumper] >= 3) then
@@ -76,7 +81,7 @@ local function bumperAndScoreLogic()
     end
 
     -- player lost a bumper
-    if (p.kartstuff[k_bumper] == 2) then
+    if (p.kartstuff[k_bumper] < 3) then
       p.kartstuff[k_bumper] = 3;
       subtractPoints(p);
     end;
@@ -84,6 +89,11 @@ local function bumperAndScoreLogic()
   end;
 end;
 
-addHook("MapLoad", setEnabled);
-addHook("MobjThinker", hideBumpers, MT_BATTLEBUMPER);
+local function netVars(n)
+  enabled = n($);
+end
+
+addHook("NetVars", netVars);
+addHook("MapLoad", setEnabled)
 addHook("ThinkFrame", bumperAndScoreLogic);
+addHook("MobjThinker", hideBumpers, MT_BATTLEBUMPER);
